@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  initializer:
+    build:
+      context: .
+      dockerfile: Dockerfile.init
+    volumes:
+      - .:/app
+    command: sh /init.sh
+
+  backend:
+    build:
+      context: ./etec-pi-2024-backend-Santiii4
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    depends_on:
+      - initializer
+
+  frontend:
+    build:
+      context: ./etec-pi-2024-frontend-Santiii4
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - initializer
+
+networks:
+  app-network:
+    driver: bridge
+
+
+
+
+
+
+
