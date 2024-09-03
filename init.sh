@@ -8,7 +8,7 @@ FRONTEND_REPO="https://github.com/etec-integration-project/etec-pi-2024-frontend
 BACKEND_DIR="etec-pi-2024-backend-Santiii4-main"
 FRONTEND_DIR="etec-pi-2024-frontend-Santiii4-main"
 
-# Mostrar mensajes de depuración
+# Clonar y configurar el backend
 echo "Clonando el repositorio del backend..."
 if [ ! -d "$BACKEND_DIR" ]; then
   git clone $BACKEND_REPO $BACKEND_DIR
@@ -24,6 +24,28 @@ echo "Instalando dependencias del backend..."
 cd $BACKEND_DIR || exit 1
 npm install
 cd ..
+
+# Clonar y configurar el frontend
+echo "Clonando el repositorio del frontend..."
+if [ ! -d "$FRONTEND_DIR" ]; then
+  git clone $FRONTEND_REPO $FRONTEND_DIR
+  if [ $? -ne 0 ]; then
+    echo "Error clonando frontend"
+    exit 1
+  fi
+else
+  echo "El directorio del frontend ya existe."
+fi
+
+echo "Instalando dependencias del frontend..."
+cd $FRONTEND_DIR || exit 1
+npm install
+cd ..
+
+# Iniciar los servicios con Docker Compose
+echo "Iniciando los servicios con Docker Compose..."
+docker-compose -f unified-docker-compose.yml up --build
+
 
 echo "Clonando el repositorio del frontend..."
 if [ ! -d "$FRONTEND_DIR" ]; then
